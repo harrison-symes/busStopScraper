@@ -20,7 +20,7 @@ request
       .then(arr => {
         console.log("We got the coordinates, now to write them to a file :)")
         const fileName = `bus${busNumber}${isInbound?'IN':'OUT'}.txt`
-        fs.writeFile(`${__dirname}/${fileName}`, JSON.stringify(arr), (err) => {
+        fs.writeFile(`${__dirname}/coords/${fileName}`, JSON.stringify(arr), (err) => {
           if (!err) console.log(`Positions of ${isInbound?"Inbound":'Outbound'} stops for bus ${busNumber} written! to ${fileName}, have fun!`)
           else console.log(err)
         })
