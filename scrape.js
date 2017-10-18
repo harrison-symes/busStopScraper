@@ -14,7 +14,7 @@ start()
 function start() {
   getBusNumbers()
     .then(busArr => {
-      console.log(busArr)
+      console.log(busArr.length, 'services to request')
       mapBusses(busArr, 0)
       .then(() => console.log('done'))
       .catch(err => console.log({err}))
@@ -35,7 +35,7 @@ function mapBusses(busArr, idx) {
 
 function twoDirecional(busNumber) {
   return new Promise(function(resolve, reject) {
-    console.log('getting inbound / outbound for bus' + busNumber)
+    console.log('getting inbound / outbound for bus ' + busNumber)
     // return resolve()
     return busScraper(busNumber, true)
     .then(() => busScraper(busNumber), false)
@@ -45,6 +45,7 @@ function twoDirecional(busNumber) {
 }
 
 function busScraper(busNumber, isInbound) {
+  console.log(busNumber,  isInbound ? 'inbound' : 'outbound')
   return new Promise(function(resolve, reject) {
     request
       .get(`https://www.metlink.org.nz/timetables/bus/${busNumber}/${isInbound?'inbound':'outbound'}`)
@@ -56,12 +57,12 @@ function busScraper(busNumber, isInbound) {
         for (let i = 0; i < selected.length; i++) {
           stops.push(selected[i].attribs.name)
         }
-        console.log("got the bus numbers, now to find their coordinates")
+        console.log("got the stop numbers, now to find their coordinates")
         promiseChain(stops, 0, [])
-          .then(arr => {
+          .then(coords => {
             console.log("We got the coordinates, now to write them to a file :)")
             const fileName = `bus${busNumber}${isInbound?'IN':'OUT'}.txt`
-            fs.writeFile(`${__dirname}/coords/${fileName}`, JSON.stringify(arr), (err) => {
+            fs.writeFile(`${__dirname}/coords/${fileName}`, JSON.stringify({busNumber, coords}), (err) => {
               if (!err) {
                 console.log(`Positions of ${isInbound?"Inbound":'Outbound'} stops for bus ${busNumber} written! to ${fileName}, have fun!`)
                 resolve()
@@ -76,12 +77,12 @@ function busScraper(busNumber, isInbound) {
 
 function promiseChain (stops, idx, arr) {
   return new Promise(function(resolve, reject) {
+    process.stdout.write('.')
     request
     .get('https://www.metlink.org.nz/api/v1/StopDepartures/' + stops[idx])
     .then(res => {
-      const coords = {Lat: res.body.Stop.Lat, Lng: res.body.Stop.Long}
+      const coords = {stopNumber: stops[idx], lat: res.body.Stop.Lat, lng: res.body.Stop.Long}
       arr.push(coords)
-      console.log({coords})
       if (idx == stops.length - 1) resolve(arr)
       else setTimeout(() => resolve(promiseChain(stops, idx + 1, arr)), 3000)
     })
