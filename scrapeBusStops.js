@@ -20,7 +20,7 @@ module.exports = function scrapeBusStops (busNumber, isInbound) {
         recurseStopNumbers(stops, 0, [])
           .then(coords => {
             console.log("We got the coordinates, now to write them to a file :)")
-            const fileName = `bus${busNumber}${isInbound?'IN':'OUT'}.txt`
+            const fileName = `bus-${busNumber}-${isInbound?'IN':'OUT'}.txt`
             fs.writeFile(`${__dirname}/coords/${fileName}`, JSON.stringify({busNumber, coords}), (err) => {
               if (!err) {
                 console.log(`Positions of ${isInbound?"Inbound":'Outbound'} stops for bus ${busNumber} written! to ${fileName}, have fun!`)
