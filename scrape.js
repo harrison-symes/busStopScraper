@@ -2,19 +2,29 @@ var request = require('superagent')
 var cheerio = require('cheerio')
 var fs = require('fs')
 
+var getBusNumbers = require('./getBusNumber')
+
 const number = process.argv[2]
 const inbound = process.argv[3] == 'i'
 
 // busScraper(number, inbound)
 
-const busArr = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+start()
 
-mapBusses(busArr, 0)
-  .then(() => console.log('done'))
-  .catch(err => console.log({err}))
+function start() {
+  getBusNumbers()
+    .then(busArr => {
+      console.log(busArr)
+      mapBusses(busArr, 0)
+      .then(() => console.log('done'))
+      .catch(err => console.log({err}))
+    })
+    .catch(err => console.log(err))
+}
+
 
 function mapBusses(busArr, idx) {
-  console.log('mapping', {busArr, idx})
+  console.log('mapping', busArr[idx])
   return new Promise(function(resolve, reject) {
     if (idx == busArr.length) resolve()
     else return twoDirecional(busArr[idx])
