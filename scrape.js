@@ -24,7 +24,7 @@ function start() {
 
 
 function mapBusses(busArr, idx) {
-  console.log('mapping', busArr[idx])
+  console.log('OVERALL ' + (idx / busArr.length * 100).toString().split('.')[0] + '% - next:' + busArr[idx] )
   return new Promise(function(resolve, reject) {
     if (idx == busArr.length) resolve()
     else return twoDirecional(busArr[idx])
@@ -77,7 +77,8 @@ function busScraper(busNumber, isInbound) {
 
 function promiseChain (stops, idx, arr) {
   return new Promise(function(resolve, reject) {
-    process.stdout.write('.')
+    // process.stdout('.')
+    console.log((idx / stops.length * 100).toString().split('.')[0] + '% - next:', stops[idx])
     request
     .get('https://www.metlink.org.nz/api/v1/StopDepartures/' + stops[idx])
     .then(res => {
