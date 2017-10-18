@@ -31,6 +31,7 @@ module.exports = function scrapeBusStops (busNumber, isInbound) {
             fs.writeFile(`${__dirname}/coords/${fileName}`, JSON.stringify(file), (err) => {
               if (!err) {
                 console.log(`Positions of ${isInbound?"Inbound":'Outbound'} stops for bus ${busNumber} written! to ${fileName}, have fun!`)
+                console.log('-------')
                 resolve()
               }
               else reject(err)

@@ -10,8 +10,11 @@ module.exports = function recurseStopNumbers (stops, idx, arr) {
       const coords = {stopNumber: stops[idx], lat: res.body.Stop.Lat, lng: res.body.Stop.Long}
       arr.push(coords)
       if (idx == stops.length - 1) resolve(arr)
-      else setTimeout(() => resolve(recurseStopNumbers(stops, idx + 1, arr)), 3000)
+      else setTimeout(() => resolve(recurseStopNumbers(stops, idx + 1, arr)), 100)
     })
-    .catch(err => reject(err))
+    .catch(err => {
+      console.log('hit error for stop', stops[idx], '...trying again')
+      setTimeout(() => resolve(recurseStopNumbers(stops, idx, arr)), 3000)
+    })
   });
 }
