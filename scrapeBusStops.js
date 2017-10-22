@@ -21,7 +21,7 @@ module.exports = function scrapeBusStops (busNumber, isInbound) {
           let selected = $('#timetableDataStops').find('.stop').find('a')
           const stops = []
           for (let i = 0; i < selected.length; i++) {
-            stops.push(selected[i].attribs.name)
+            if (selected[i].attrbs.name) stops.push(selected[i].attribs.name)
           }
           console.log("got the stop numbers, now to find their coordinates")
           recurseStopNumbers(stops, 0, [])
