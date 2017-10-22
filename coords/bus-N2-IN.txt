@@ -1,1 +1,0 @@
-{"busNumber":"N2","coords":[],"isInbound":true}
