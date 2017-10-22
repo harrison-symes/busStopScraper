@@ -2,6 +2,10 @@ var request = require('superagent')
 
 module.exports = function recurseStopNumbers (stops, idx, arr) {
   return new Promise(function(resolve, reject) {
+    if (stops.length == 0) {
+      console.log('no stops found')
+      return resolve(arr)
+    }
     // process.stdout('.')
     console.log((idx / stops.length * 100).toString().split('.')[0] + '% - next:', stops[idx])
     request

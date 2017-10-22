@@ -21,13 +21,13 @@ module.exports = function scrapeBusStops (busNumber, isInbound) {
           let selected = $('#timetableDataStops').find('.stop').find('a')
           const stops = []
           for (let i = 0; i < selected.length; i++) {
-            if (selected[i].attrbs.name) stops.push(selected[i].attribs.name)
+            if (selected[i].attrbs && selected[i].attrbs.name) stops.push(selected[i].attribs.name)
           }
           console.log("got the stop numbers, now to find their coordinates")
           recurseStopNumbers(stops, 0, [])
           .then(coords => {
             console.log("We got the coordinates, now to write them to a file :)")
-            const file = {busNumber, coords, isInbound}
+            const file = {busNumber, coords, isInbound: !!isInbound}
             fs.writeFile(`${__dirname}/coords/${fileName}`, JSON.stringify(file), (err) => {
               if (!err) {
                 console.log(`Positions of ${isInbound?"Inbound":'Outbound'} stops for bus ${busNumber} written! to ${fileName}, have fun!`)
